@@ -6,31 +6,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import HomeScreen from "../pages/HomeScreen";
 import DonateScreen from "../pages/DonateScreen";
 import ProfileScreen from "../pages/ProfileScreen";
+import ShoppingScreen from "../pages/ShoppingScreen";
 
-
-// function DonateScreen() {
-//   return (
-//     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-//       <Text>Donate!</Text>
-//     </View>
-//   );
-// }
-
-function ShoppingScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
-
-// function ProfileScreen() {
-//   return (
-//     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-//       <Text>Settings!</Text>
-//     </View>
-//   );
-// }
 
 const Tab = createBottomTabNavigator();
 
