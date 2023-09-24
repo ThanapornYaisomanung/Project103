@@ -95,7 +95,8 @@ const styles = StyleSheet.create({
   },
   dotActive:{
     margin:3,
-    color: '#D7385E'
+    color: '#D7385E',
+    
   },
   dot:{
     margin:3,

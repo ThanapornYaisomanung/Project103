@@ -7,7 +7,7 @@ const SearchBar = () => {
   const onChangeSearch = query => setSearchQuery(query);
 
   return (
-    <Searchbar style={{ backgroundColor: theme.colors.onSecondary, width:300}}
+    <Searchbar style={{ backgroundColor: theme.colors.onSecondary, width:300 , height:55}}
       placeholder="Search.."
       onChangeText={onChangeSearch}
       value={searchQuery}
