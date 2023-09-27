@@ -1,4 +1,5 @@
 import { View, Text, Image, StyleSheet, ScrollView , Link} from "react-native";
+import { Button } from "../component/Theme";
 import SearchBar from "../component/SearchBar";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SwipeSlide from "../component/SwipeSlide";
@@ -36,6 +37,7 @@ export default function HomeScreen({ navigation }) {
       {/* branner */}
       <SwipeSlide></SwipeSlide>
 
+            
       {/* Categories */}
       <View>
         {/* หัวข้อ */}
