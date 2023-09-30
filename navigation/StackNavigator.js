@@ -3,7 +3,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { TabBarNavigator } from './TabBarNavigator';
 import FavoriteScreen from "../pages/FavoriteScreen";
 import HomeScreen from "../pages/HomeScreen";
-
+import EditScreen from "../pages/EditScreen";
+import Infodonate from "../pages/Infodonate";
+import Donateform from "../pages/Donateform";
 const Stack = createStackNavigator();
 
 const MainStackNavigator = () => {
@@ -34,6 +36,9 @@ const MainStackNavigator = () => {
       >
       <Stack.Screen name="TabBarNavigator" component={TabBarNavigator} />
       <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
+      <Stack.Screen name="EditScreen" component={EditScreen} />
+      <Stack.Screen name="Infodonate" component={Infodonate} />
+      <Stack.Screen name="Donateform" component={Donateform} />
     </Stack.Navigator>
     );
   }

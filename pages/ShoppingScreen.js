@@ -3,6 +3,7 @@ import SearchBar from "../component/SearchBar";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ProductCard from "../component/ProductCard";
 import CategoriesCard from "../component/CategoriesCard";
+import { Categories } from "../component/Categories";
 
 export default function ShoppingScreen({ navigation }) {
   return (
@@ -42,16 +43,12 @@ export default function ShoppingScreen({ navigation }) {
             alignItems: "center",
           }}
         >
-          <Text style={styles.text}>Categories</Text>
-          <Text
-            style={styles.textSub}
-            onPress={() => navigation.navigate("FavoriteScreen")}
-          >
-            More
-          </Text>
+          
+          <Categories/>
+
         </View>
 
-        <View style={{ margin: 10 }}>
+        {/* <View style={{ margin: 10 }}>
           <ScrollView horizontal={true}>
             <View style={{ flex: 1, flexDirection: "row", gap: 10 }}>
               <CategoriesCard />
@@ -60,7 +57,7 @@ export default function ShoppingScreen({ navigation }) {
               <CategoriesCard />
             </View>
           </ScrollView>
-        </View>
+        </View> */}
       </View>
 
       <Text style={styles.text}>My Feed</Text>

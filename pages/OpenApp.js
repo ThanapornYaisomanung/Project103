@@ -52,6 +52,8 @@ export default function OpenApp() {
   //   );
   // }
 
+  
+
   return (
     <Provider theme={theme}>
       <NavigationContainer>

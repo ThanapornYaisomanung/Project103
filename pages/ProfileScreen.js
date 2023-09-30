@@ -5,8 +5,52 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Proimg from "../component/Proimg";
 import ProductCard from "../component/ProductCard";
 import { TabViewNavigator } from "../navigation/TabViewNavigator";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import { useState } from "react";
 
 export default function ProfileScreen({ navigation }) {
+const [UserName, setUserName] = useState('');
+
+  const auth = getAuth();
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const uid = user.uid;
+      const email = user.email;
+      // console.log("This account:", uid, email);
+      
+      const q = query(collection(db, "Users"), where("Email", "==", email));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.id, " => ", doc.data().Name);
+        setUserName(doc.data().Name);
+      });
+      
+    } else {
+      // User is signed out
+      alert(
+        "sign in Error!",
+        "Please log in to access the 2 love application again.",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]
+      );
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "StartScreen" }],
+      });
+    }
+
+  });
+  
+
   return (
     // style={styles.scrollView}
     <View style={styles.container}>
@@ -23,16 +67,18 @@ export default function ProfileScreen({ navigation }) {
             name="create-outline"
             size={30}
             color={"white"}
-            onPress={() => navigation.navigate("FavoriteScreen")}
+            onPress={() => navigation.navigate("EditScreen")}
           ></Ionicons>
         </View>
 
         <View style={styles.SubTopbar}>
           <View style={styles.list1}>
             <Proimg></Proimg>
-            <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
+            >
               <View style={styles.profile}>
-                <Text style={styles.text}>Mamyfotko</Text>
+                <Text style={styles.text}>{UserName}</Text>
                 <Text style={styles.text}>5,000 follwers</Text>
                 <View style={styles.star}>
                   <Ionicons
@@ -78,12 +124,12 @@ const styles = StyleSheet.create({
   },
   Topbar: {
     backgroundColor: "#D7385E",
-    height: 200
+    height: 200,
   },
   SubTopbar1: {
     padding: 10,
     // flex: 1,
-    paddingTop:36,
+    paddingTop: 36,
     flexDirection: "row",
     backgroundColor: "#D7385E",
     justifyContent: "space-between",
@@ -112,7 +158,7 @@ const styles = StyleSheet.create({
   textHead: {
     fontSize: 20,
     color: "#fff",
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
   text1: {
     flex: 1,

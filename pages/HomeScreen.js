@@ -5,6 +5,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import SwipeSlide from "../component/SwipeSlide";
 import ProductCard from "../component/ProductCard";
 import CategoriesCard from "../component/CategoriesCard";
+import { Categories } from "../component/Categories";
 
 function DonateScreen() {
   return (
@@ -39,30 +40,7 @@ export default function HomeScreen({ navigation }) {
 
             
       {/* Categories */}
-      <View>
-        {/* หัวข้อ */}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Text style={styles.text}>Categories</Text>
-          <Text style={styles.textSub} onPress={() => navigation.navigate("FavoriteScreen")}>More</Text>
-        </View>
-
-        <View style={{ margin: 10 }}>
-          <ScrollView horizontal={true}>
-            <View style={{flex:1, flexDirection:'row', gap:10}}>
-              <CategoriesCard />
-              <CategoriesCard />
-              <CategoriesCard />
-              <CategoriesCard />
-            </View>
-          </ScrollView>
-        </View>
-      </View>
+      <Categories/>
 
       {/* Recommend */}
       <View>
