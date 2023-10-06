@@ -62,7 +62,7 @@ const [UserName, setUserName] = useState('');
             color={"white"}
             onPress={() => navigation.openDrawer()}
           ></Ionicons>
-          <Text style={styles.textHead}>Profile</Text>
+          <Text style={styles.textHead}>{UserName}</Text>
           <Ionicons
             name="create-outline"
             size={30}
@@ -78,7 +78,7 @@ const [UserName, setUserName] = useState('');
               style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
             >
               <View style={styles.profile}>
-                <Text style={styles.text}>{UserName}</Text>
+                {/* <Text style={styles.text}>{UserName}</Text> */}
                 <Text style={styles.text}>5,000 follwers</Text>
                 <View style={styles.star}>
                   <Ionicons
@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
   },
   SubTopbar1: {
     padding: 10,
-    // flex: 1,
     paddingTop: 36,
     flexDirection: "row",
     backgroundColor: "#D7385E",

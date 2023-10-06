@@ -1,3 +1,4 @@
+import React from "react";
 import {
   View,
   Text,
@@ -8,22 +9,16 @@ import {
   TouchableHighlight,
   ActivityIndicator
 } from "react-native";
-import React from "react";
-import CategoriesCard from "./CategoriesCard";
 import { collection, query, getDocs, limit, where } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { db } from "../firebase";
+import CateCard from "../component/CateCard";
 
-const Categories = ({ navigation }) => {
-  onLearnMore = (user) => {
-    this.props.navigation.navigate("Infodonate", { ...user });
-  };
-
+export default function CatagoriesTypeFM() {
   const [CatList, setCatList] = useState([]);
   const getCatList = async () => {
     const CatListCol = query(
       collection(db, "Category"),
-      limit(4),
       where("Gender", "==", "Female")
     );
     const CatListSnapshot = await getDocs(CatListCol);
@@ -39,13 +34,20 @@ const Categories = ({ navigation }) => {
   return (
     <View>
       {CatList.length == 0 ? (
-        <View style={styles.container}>
+        <View style={styles.spinner}>
           <ActivityIndicator size="large" color="#D7385E" />
         </View>
       ) : (
-        <View style={{ margin: 10 }}>
-          <ScrollView horizontal={true}>
-            <View style={{ flex: 1, flexDirection: "row", gap: 10 }}>
+        <View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          ></View>
+          <ScrollView>
+            <View style={styles.contentCard}>
               {CatList.map((item) => (
                 <TouchableHighlight
                   // onPress={() =>
@@ -54,11 +56,7 @@ const Categories = ({ navigation }) => {
                   style={{ borderRadius: 25 }}
                   key={item.id}
                 >
-                  <CategoriesCard
-                    Icons={item.Icons}
-                    Name={item.Name}
-                    Gender={item.Gender}
-                  ></CategoriesCard>
+                  <CateCard Icons={item.Images} Name={item.Name}></CateCard>
                 </TouchableHighlight>
               ))}
             </View>
@@ -67,11 +65,22 @@ const Categories = ({ navigation }) => {
       )}
     </View>
   );
-};
-
-export { Categories };
-
+}
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  list: {
+    flex: 1,
+    flexDirection: "column",
+    margin: 20,
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    alignContent: "space-between",
+    maxHeight: 750,
+    maxWidth: 500,
+  },
+  scrollView: {},
   text: {
     fontSize: 24,
     marginTop: 20,
@@ -102,7 +111,22 @@ const styles = StyleSheet.create({
     margin: 20,
     gap: 10,
   },
-  container: {
-    padding: 200,
+  Topbar: {
+    padding: 10,
+    paddingTop: 25,
+    backgroundColor: "#D7385E",
   },
+  SubTopBar: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  TextHead: {
+    marginLeft: 20,
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  spinner:{
+    marginTop:250
+  }
 });

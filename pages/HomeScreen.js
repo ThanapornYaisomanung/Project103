@@ -1,21 +1,34 @@
-import { View, Text, Image, StyleSheet, ScrollView , Link} from "react-native";
-import { Button } from "../component/Theme";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import SearchBar from "../component/SearchBar";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SwipeSlide from "../component/SwipeSlide";
 import ProductCard from "../component/ProductCard";
-import CategoriesCard from "../component/CategoriesCard";
 import { Categories } from "../component/Categories";
-
-function DonateScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Donate!</Text>
-    </View>
-  );
-}
+import { collection, query, getDocs, limit, where } from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { db } from "../firebase";
 
 export default function HomeScreen({ navigation }) {
+  const [PosList, setPosList] = useState([]);
+  const getPosList = async () => {
+    const PosListCol = query(collection(db, "Products"), limit(10));
+    const PosListSnapshot = await getDocs(PosListCol);
+    setPosList(
+      PosListSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    );
+  };
+
+  useEffect(() => {
+    getPosList();
+  }, []);
+
   return (
     <ScrollView style={styles.scrollView}>
       {/* หัว */}
@@ -38,33 +51,56 @@ export default function HomeScreen({ navigation }) {
       {/* branner */}
       <SwipeSlide></SwipeSlide>
 
-            
       {/* Categories */}
-      <Categories/>
+      {/* หัวข้อ */}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Text style={styles.text}>Categories</Text>
+        <Text
+          style={styles.textSub}
+          onPress={() => navigation.navigate("CatagoriesScreen")}
+        >
+          More
+        </Text>
+      </View>
+      <Categories />
 
       {/* Recommend */}
       <View>
-      <View
+        <View
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
           }}
         >
-                  <Text style={styles.text}>Recommend</Text>
-        <Text style={styles.textSub} onPress={() => navigation.navigate("FavoriteScreen")}>More</Text>
-
+          <Text style={styles.text}>Recommend</Text>
+          {/* <Text style={styles.textSub} onPress={() => navigation.navigate("FavoriteScreen")}>More</Text> */}
         </View>
 
-            <View style={styles.contentCard}>
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-            </View>
+        <View style={styles.contentCard}>
+          {PosList.map((item) => (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Proswap")}
+              style={{ borderRadius: 25 }}
+              key={item.id}
+            >
+              <ProductCard
+                NameProduct={item.NameProduct}
+                Size={item.Size}
+                Images={item.Images}
+              />
+              {/* <Text>{}</Text> */}
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
-      
     </ScrollView>
   );
 }

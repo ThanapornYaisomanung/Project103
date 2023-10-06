@@ -20,29 +20,10 @@ import { useNavigation } from "@react-navigation/native";
 import { db, collection, addDoc, getFirestore } from "../../firebase";
 
 export default function RegisterScreen({ navigation }) {
-  // const navigation = useNavigation();
-  // const [name, setName] = useState({ value: "", error: "" });
-  // const [email, setEmail] = useState({ value: "", error: "" });
-  // const [password, setPassword] = useState({ value: "", error: "" });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
-  // const onSignUpPressed =  () => {
-  // const nameError = nameValidator(name.value)
-  // const emailError = emailValidator(email.value)
-  // const passwordError = passwordValidator(password.value)
-  //   if (emailError || passwordError || nameError) {
-  //     setName({ ...name, error: nameError })
-  //     setEmail({ ...email, error: emailError })
-  //     setPassword({ ...password, error: passwordError })
-  //     return
-  //   }
-  //   navigation.reset({
-  //     index: 0,
-  //     routes: [{ name: 'Dashboard' }],
-  //   })
-  // }
 
   const onSignUpPressed = async () => {
     const auth = getAuth();

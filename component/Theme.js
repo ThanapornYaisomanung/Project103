@@ -158,14 +158,15 @@ const TextInput = ({ errorText, description, ...props }) => {
 const styles7 = StyleSheet.create({
   container: {
     width: '100%',
-    marginVertical: 12,
+    marginVertical: 10,
   },
   input: {
     backgroundColor: theme.colors.surface,
+    
   },
   description: {
     fontSize: 13,
-    color: theme.colors.secondary,
+    color: theme.colors.seconprimarydary,
     paddingTop: 8,
   },
   error: {

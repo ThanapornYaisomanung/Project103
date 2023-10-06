@@ -14,10 +14,11 @@ import { emailValidator } from "../helpers/emailValidator";
 import { passwordValidator } from "../helpers/passwordValidator";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [email2, setEmail2] = useState("");
+  const [password2, setPassword2] = useState("");
   // const [email, setEmail] = useState({ value: '', error: '' })
   // const [password, setPassword] = useState({ value: '', error: '' })
 
@@ -36,20 +37,61 @@ export default function LoginScreen({ navigation }) {
   // }
 
   const onLoginPressed = () => {
+    // const emailError = emailValidator(email.value);
+    // const passwordError = passwordValidator(password.value);
+    // if (emailError || passwordError) {
+    //   setEmail({ ...email, error: emailError });
+    //   setPassword({ ...password, error: passwordError });
+    //   return;
+    // }
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
         navigation.reset({
-              index: 0,
-              routes: [{ name: 'Dashboard' }],
-            })
-        console.log(user);
+          index: 0,
+          routes: [{ name: "Dashboard" }],
+        });
+        console.log("a", auth);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        console.log("err", email);
+        console.log("err", password);
+        console.log(errorMessage);
+        console.log(errorCode);
+
+        if (errorCode === 'auth/invalid-email' || errorCode === 'auth/invalid-login-credentials' ) {
+          const emailError = emailValidator(email.value);
+          const passwordError = passwordValidator(password.value);
+          if (emailError) {
+            setEmail({ ...email, error: emailError });
+            setPassword({ ...password, error: passwordError });
+            return;
+          }
+        } 
+        if (errorCode === 'auth/too-many-requests') {
+          alert(
+            "log in too many requests!",
+            "Please log in to access the 2 love application again.",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel",
+              },
+              { text: "OK", onPress: () => console.log("OK Pressed") },
+            ]
+          );
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "StartScreen" }],
+          });
+        } 
+
+        
       });
   };
 

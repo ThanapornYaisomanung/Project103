@@ -10,18 +10,9 @@ export default function Infodonate({ navigation, route }) {
   const Donatesid = route.params.Id;
   const [donateList, setDonateList] = useState([]);
 
-  // const getDonatesId = async () => {
-  //   if (Donatesid) {
-  //     const q = query(collection(db, "Donates"), where("id", "==", Donatesid));
-  //     const querySnapshot = await getDocs(q);
-  //     querySnapshot.forEach((doc) => {
-  //       console.log(doc.id, " => ", doc.data().Name);
-
-  //     });
-
   const getProductById = async (Donatesid) => {
     try {
-      console.log("prod", Donatesid);
+      // console.log("prod", Donatesid);
       const productRef = doc(db, "Donates", Donatesid);
       const productSnapshot = await getDoc(productRef);
       const product = { id: productSnapshot.id, ...productSnapshot.data() };
@@ -38,7 +29,7 @@ export default function Infodonate({ navigation, route }) {
 
   useEffect(() => {
     fetchProductById(Donatesid);
-  }, [Donatesid]);
+  }, []);
 
   // console.log(donateList);
 
@@ -156,7 +147,7 @@ export default function Infodonate({ navigation, route }) {
             marginTop: 20,
             marginBottom: 20,
           }}
-          onPress={() => navigation.navigate("Donateform")}
+          onPress={() => navigation.navigate("Donateform", { Donatesid })}
         >
           <Text
             style={{
