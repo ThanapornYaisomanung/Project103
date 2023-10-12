@@ -22,38 +22,44 @@ const PostsScreen = ({ navigation }) => {
   const [UserName, setUserName] = useState("");
 
   const auth = getAuth();
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const uid = user.uid;
-      const email = user.email;
-      const q = query(collection(db, "Users"), where("Email", "==", email));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        setUserName(doc.id);
-      });
-    } else {
-      alert("sign in Error!");
-    }
-  });
+
+  async function getUser() {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const uid = user.uid;
+        const email = user.email;
+        const q = query(collection(db, "Users"), where("Email", "==", email));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach(async (doc) => {
+          setUserName(doc.id);
+
+          try {
+            const CatListCol = query(
+              collection(db, "Products"),
+              where("UserCreate", "==", doc.id)
+            );
+            const CatListSnapshot = await getDocs(CatListCol);
+            setCatList(
+              CatListSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+            );
+          } catch (error) {
+            console.error(error);
+          }
+        });
+      } else {
+        alert("sign in Error!");
+      }
+
+      
+      
+    });
+  }
 
   const [CatList, setCatList] = useState([]);
-  const getCatList = async () => {
-    try {
-      const CatListCol = query(
-        collection(db, "Products"),
-        where("UserCreate", "==", UserName)
-      );
-      const CatListSnapshot = await getDocs(CatListCol);
-      setCatList(
-        CatListSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
 
   useEffect(() => {
-    getCatList();
+    getUser();
   }, []);
 
   return (
@@ -74,7 +80,7 @@ const PostsScreen = ({ navigation }) => {
           <View style={styles.contentCard}>
             {CatList.map((item) => (
               <TouchableOpacity
-                // onPress={() => navigation.navigate("Proswap", { id: item.id })}
+                onPress={() => navigation.navigate("Proswap", { id: item.id })}
                 style={{ borderRadius: 25 }}
                 key={item.id}
               >
@@ -83,7 +89,6 @@ const PostsScreen = ({ navigation }) => {
                   Size={item.Size}
                   Images={item.Images}
                 />
-
               </TouchableOpacity>
             ))}
           </View>

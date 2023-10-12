@@ -7,14 +7,14 @@ import {
   ScrollView,
   Link,
   TouchableHighlight,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { collection, query, getDocs, limit, where } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { db } from "../firebase";
 import CateCard from "../component/CateCard";
 
-export default function CatagoriesTypeM() {
+export default function CatagoriesTypeM({ navigation }) {
   const [CatList, setCatList] = useState([]);
   const getCatList = async () => {
     const CatListCol = query(
@@ -50,9 +50,11 @@ export default function CatagoriesTypeM() {
             <View style={styles.contentCard}>
               {CatList.map((item) => (
                 <TouchableHighlight
-                  // onPress={() =>
-                  //   navigation.navigate("Infodonate", { id: item.id })
-                  // }
+                  onPress={() =>
+                    navigation.navigate("ProductlistScreenM", {
+                      CatName: item.Name,
+                    })
+                  }
                   style={{ borderRadius: 25 }}
                   key={item.id}
                 >
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#fff",
   },
-  spinner:{
-    marginTop:250
-  }
+  spinner: {
+    marginTop: 250,
+  },
 });

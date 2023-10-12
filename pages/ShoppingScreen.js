@@ -82,7 +82,7 @@ export default function ShoppingScreen({ navigation }) {
         <View style={styles.contentCard}>
           {PosList.map((item) => (
             <TouchableOpacity
-              // onPress={() => navigation.navigate("Proswap", { id: item.id })}
+              onPress={() => navigation.navigate("Proswap", { id: item.id })}
               style={{ borderRadius: 25 }}
               key={item.id}
             >

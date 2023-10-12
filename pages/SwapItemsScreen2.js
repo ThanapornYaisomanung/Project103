@@ -16,7 +16,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useState, useEffect } from "react";
 
-export default function SwapItemsScreen({ navigation }) {
+export default function SwapItemsScreen2({ navigation }) {
   const [UserName, setUserName] = useState("");
   const [UserNameId, setUserNameId] = useState("");
   const [SwapItemsId, setSwapItemsId] = useState("");
@@ -43,7 +43,7 @@ export default function SwapItemsScreen({ navigation }) {
           try {
             const CatListCol = query(
               collection(db, "SwapItems"),
-              where("SwapOwner", "==", doc.id)
+              where("ProductOwner", "==", doc.id)
             );
             const CatListSnapshot = await getDocs(CatListCol);
             setSwapItems(
@@ -61,17 +61,6 @@ export default function SwapItemsScreen({ navigation }) {
               ProListSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
             );
 
-            const ProductOwnerListCol = query(
-              collection(db, "SwapItems"),
-              where("ProductOwner", "==", doc.id)
-            );
-            const ProductOwnerListSnapshot = await getDocs(ProductOwnerListCol);
-            setSwapItemsOwner(
-              ProductOwnerListSnapshot.docs.map((doc) => ({
-                ...doc.data(),
-                id: doc.id,
-              }))
-            );
           } catch (error) {
             console.error(error);
           }
@@ -90,7 +79,6 @@ export default function SwapItemsScreen({ navigation }) {
             { text: "OK", onPress: () => console.log("OK Pressed") },
           ]
         );
-        
       }
     });
   }
@@ -99,6 +87,8 @@ export default function SwapItemsScreen({ navigation }) {
     getUserSwapItems();
     // getProductById();
   }, []);
+
+// console.log(SwapItems);
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -115,11 +105,18 @@ export default function SwapItemsScreen({ navigation }) {
         </View>
       </View>
 
+
       {/* Recommend */}
       <View>
-        <View>
+        <View
+        // style={{
+        //   flexDirection: "row",
+        //   justifyContent: "space-between",
+        //   alignItems: "center",
+        // }}
+        >
           <Text style={styles.text}>รายการแลก</Text>
-          <Text style={styles.subtext}>รออนุมัติ</Text>
+          <Text style={styles.subtext}>การตอบรับ</Text>
         </View>
 
         <View style={styles.alternativeLayoutButtonContainer}>
@@ -127,10 +124,7 @@ export default function SwapItemsScreen({ navigation }) {
             onPress={() => navigation.navigate("SwapItemsScreen")}
             title="รออนุมัติ"
           />
-          <Button
-            onPress={() => navigation.navigate("SwapItemsScreen2")}
-            title="ตอบรับ"
-          />
+          <Button onPress={() => navigation.navigate("")} title="ตอบรับ" />
           <Button
             onPress={() => navigation.navigate("SwapItemsScreen3")}
             title="เสร็จสิ้น"
@@ -139,7 +133,7 @@ export default function SwapItemsScreen({ navigation }) {
 
         {SwapItems.length == null || SwapItems.length === 0 ? (
           <View style={{ marginLeft: 20, marginTop: 20 }}>
-            <Text>ไม่มีข้อมูลการแลกเปลี่ยนสินค้า</Text>
+            <Text>ไม่มีข้อมูลการตอบรับสินค้า</Text>
           </View>
         ) : (
           <View style={styles.contentCard}>
@@ -153,7 +147,7 @@ export default function SwapItemsScreen({ navigation }) {
                         ItemProductOwnerID: item.ItemProductOwner,
                         ProductOwnerID: item.ProductOwner,
                         SwapOwnerID: item.SwapOwner,
-                        ItemSwapOwnerID: item.ItemSwapOwner,
+                        ItemSwapOwnerID: item.ItemSwapOwner
                       })
                     }
                     style={{ borderRadius: 25 }}
@@ -166,7 +160,9 @@ export default function SwapItemsScreen({ navigation }) {
                     />
                   </TouchableOpacity>
                 ) : (
-                  <View></View>
+                  <View>
+                    
+                  </View>
                 )}
               </View>
             ))}
@@ -220,6 +216,28 @@ const styles = StyleSheet.create({
   Topbar: {
     padding: 10,
     paddingTop: 25,
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "#D7385E",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  contentCard: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    margin: 20,
+    gap: 10,
+  },
+  alternativeLayoutButtonContainer: {
+    margin: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginRight: 170,
+    marginLeft: 30,
+  },
+  Topbar: {
+    padding: 10,
+    paddingTop: 25,
     backgroundColor: "#D7385E",
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
@@ -235,18 +253,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "#fff",
-  },
-  contentCard: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    margin: 20,
-    gap: 10,
-  },
-  alternativeLayoutButtonContainer: {
-    margin: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginRight: 170,
-    marginLeft: 30,
   },
 });

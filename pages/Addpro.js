@@ -114,8 +114,6 @@ const K_Place = [
   },
 ];
 
-
-
 const Addpro = ({ navigation }) => {
   const [Namepro, SetNamepro] = useState("");
   const [Description, SetDescription] = useState("");
@@ -124,12 +122,13 @@ const Addpro = ({ navigation }) => {
   const [Categories, SetCategories] = useState({});
   const [Condition, SetCondition] = useState({});
   const [Url, SetUrl] = useState("");
-  const [takePro, setTakePro] = useState("");
+  const [Contact, SetContact] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
   const [Locations, SetLocations] = useState({});
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [post, setPost] = useState(null);
+
 
   const auth = getAuth();
   onAuthStateChanged(auth, async (user) => {
@@ -259,6 +258,8 @@ const Addpro = ({ navigation }) => {
         Shipment: selectedValue.item,
         Locations: Locations.item,
         UserCreate: UserName,
+        Contact: Contact,
+        Swap: '0'
       });
 
       console.log("Document written with ID: ", docRef.id);
@@ -281,12 +282,14 @@ const Addpro = ({ navigation }) => {
   const [UserName, setUserName] = useState("");
 
   function getSelectedValue(item) {
+    // console.log(item);
+    if(item.item == "Delivery"){
+      SetLocations(item)
+    }
     setSelectedValue(item);
   }
 
   const place = selectedValue.item;
-
-
 
   return (
     <View>
@@ -348,6 +351,26 @@ const Addpro = ({ navigation }) => {
             </View>
           </View>
 
+          {/* Contact */}
+          <View>
+            <View style={styles.FormRow}>
+              <Text style={styles.Textform}>Contact</Text>
+              <View>
+                <TextInput
+                  label=""
+                  editable
+                  multiline
+                  numberOfLines={3}
+                  maxLength={150}
+                  style={{ height: 80, width: 287 }}
+                  returnKeyType="next"
+                  value={Contact.value}
+                  onChangeText={(text) => SetContact(text)}
+                />
+              </View>
+            </View>
+          </View>
+
           {/* takePro */}
           <View style={styles.FormRow}>
             <Text style={styles.Textform4}>Shipment</Text>
@@ -385,6 +408,7 @@ const Addpro = ({ navigation }) => {
           ) : (
             <View></View>
           )}
+
 
           {/* Size */}
           <View style={styles.FormRow}>

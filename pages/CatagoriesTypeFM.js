@@ -14,12 +14,12 @@ import { useState, useEffect } from "react";
 import { db } from "../firebase";
 import CateCard from "../component/CateCard";
 
-export default function CatagoriesTypeFM() {
+export default function CatagoriesTypeFM({ navigation }) {
   const [CatList, setCatList] = useState([]);
   const getCatList = async () => {
     const CatListCol = query(
       collection(db, "Category"),
-      where("Gender", "==", "Female")
+      where("Gender", "==", "Women")
     );
     const CatListSnapshot = await getDocs(CatListCol);
     setCatList(
@@ -50,9 +50,9 @@ export default function CatagoriesTypeFM() {
             <View style={styles.contentCard}>
               {CatList.map((item) => (
                 <TouchableHighlight
-                  // onPress={() =>
-                  //   navigation.navigate("Infodonate", { id: item.id })
-                  // }
+                  onPress={() =>
+                    navigation.navigate("ProductlistScreenFM" , { CatName: item.Name , Gender: item.Gender})
+                  }
                   style={{ borderRadius: 25 }}
                   key={item.id}
                 >

@@ -5,7 +5,6 @@ import {
   ScrollView,
   Image,
   Touchable,
-  Alert,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -17,17 +16,14 @@ import {
   getDoc,
   doc,
   getDocs,
-  deleteDoc,
+  updateDoc
 } from "firebase/firestore";
 import { db, addDoc } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-export default function Swap2({ navigation, route }) {
+export default function Swap12({ navigation, route }) {
   const ProductId = route.params.ProductId;
   const idMepro = route.params.idMepro;
-  const SwapItemsId = route.params.SwapItemsId;
-
-  console.log("อันนี้", SwapItemsId);
 
   const [donateList, setDonateList] = useState([]);
   const [ProMeList, setProMeList] = useState([]);
@@ -35,6 +31,7 @@ export default function Swap2({ navigation, route }) {
   const [UserName, setUserName] = useState("");
   const [UserMe, setUserMe] = useState("");
   const [UserMeId, setUserMeId] = useState("");
+  const [SwapItemsId, setSwapItemsId] = useState("");
 
   const auth = getAuth();
   onAuthStateChanged(auth, async (user) => {
@@ -90,7 +87,6 @@ export default function Swap2({ navigation, route }) {
 
   const fetchUser = async (ProductId) => {
     const result = await getProductById(ProductId);
-
     // setUserId(result.UserCreate);
     try {
       const productRef = doc(db, "Users", result.UserCreate);
@@ -128,13 +124,23 @@ export default function Swap2({ navigation, route }) {
         ProductOwner: UserNameId,
         ItemSwapOwner: ProMeList.id,
         ItemProductOwner: donateList.id,
+        ItemProductOwner_NameProduct: donateList.NameProduct,
+        ItemProductOwner_Size: donateList.Size,
+        ItemProductOwner_Images: donateList.Images,
         SO_AgreeSwap: "1",
         PO_AgreeSwap: "0",
         CancelSwap: "0",
         SuccessSwap: "0",
       });
 
+      setSwapItemsId(docRef.id);
       console.log("Swap written with ID: ", docRef.id);
+
+      const SwapUpdateRef = doc(db, "Products", ProductId);
+
+      await updateDoc(SwapUpdateRef, {
+        Swap: "1",
+      });
 
       alert("Swap item success!", [
         {
@@ -148,50 +154,15 @@ export default function Swap2({ navigation, route }) {
             navigation.navigate("Swap2", {
               idMepro: idMepro,
               ProductId: ProductId,
+              SwapItemsId: docRef.id,
             }),
         },
         navigation.navigate("Swap2", {
           idMepro: idMepro,
           ProductId: ProductId,
+          SwapItemsId: docRef.id,
         }),
       ]);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
-
-  const alertCancelOrder = () => {
-    try {
-      Alert.alert("Cancel to swap", "Do you want to cancel the swap?", [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-        { text: "OK", onPress: () => CancelOrder() },
-      ]);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
-  
-  const CancelOrder = async () => {
-    console.log('canceled the swap ID: ', SwapItemsId);
-    await deleteDoc(doc(db, "SwapItems", SwapItemsId));
-
-    try {
-      Alert.alert(
-        "Cancel to swap",
-        "You have successfully canceled the swap.",
-        [
-          {
-            text: "OK",
-            onPress: () => navigation.navigate("TabBarNavigator"),
-          },
-          navigation.navigate("TabBarNavigator"),
-
-        ]
-      );
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -203,8 +174,10 @@ export default function Swap2({ navigation, route }) {
     fetchProductMeById(idMepro);
   }, []);
 
-  // console.log('คนที่เราไปขอแลก', UserNameId);
-  // console.log('เราที่แลก', UserMeId);
+  console.log("คนที่เราไปขอแลก", UserNameId);
+  console.log("เราที่แลก", UserMeId);
+  console.log("Swap written with ID: ", SwapItemsId);
+  console.log(ProductId);
 
   return (
     <View>
@@ -219,6 +192,7 @@ export default function Swap2({ navigation, route }) {
           ></Ionicons>
           <Text style={styles.TextHead}>2LOVE SWAP</Text>
         </View>
+
         <View style={{ flexDirection: "row" }}>
           <Image
             source={{
@@ -253,7 +227,9 @@ export default function Swap2({ navigation, route }) {
             }}
           />
         </View>
+
         <View style={{ flexDirection: "row" }}>
+          {/* Me */}
           <Text
             style={{
               marginLeft: 30,
@@ -261,19 +237,25 @@ export default function Swap2({ navigation, route }) {
               fontSize: 20,
               fontWeight: "bold",
               color: "#fff",
+              width: 105,
             }}
+            numberOfLines={2}
           >
             {UserMe != UserMe ? <Text>Null</Text> : UserMe}
           </Text>
+
           <Text
             style={{
-              marginLeft: 130,
+              marginLeft: 125,
               marginTop: 20,
               fontSize: 20,
               fontWeight: "bold",
               color: "#fff",
+              width: 105,
             }}
+            numberOfLines={2}
           >
+            {/* dasdasdasdad */}
             {UserName != UserName ? <Text>Null</Text> : UserName}
           </Text>
         </View>
@@ -318,6 +300,16 @@ export default function Swap2({ navigation, route }) {
                     }}
                   />
                 )}
+                {/* <View style={styles.Form}>
+                  <Ionicons
+                    name="add-circle-outline"
+                    size={80}
+                    color={"white"}
+                    onPress={() => navigation.navigate("My2love" , { id: UserMeId })}
+                    alignSelf={"center"}
+                  ></Ionicons> 
+                  
+                </View>*/}
               </View>
               <Ionicons
                 name="swap-horizontal"
@@ -326,6 +318,7 @@ export default function Swap2({ navigation, route }) {
                 alignSelf={"center"}
                 paddingLeft={20}
               ></Ionicons>
+
               {donateList.Images == null ? (
                 <Image
                   source={{
@@ -354,83 +347,29 @@ export default function Swap2({ navigation, route }) {
                 />
               )}
             </View>
-
-            <View>
-              <TouchableOpacity
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#D7385E",
+                height: 50,
+                width: 150,
+                borderRadius: 15,
+                alignSelf: "center",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 20,
+              }}
+              onPress={() => upData()}
+            >
+              <Text
                 style={{
-                  alignSelf: "center",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: 20,
+                  color: "#fff",
+                  fontWeight: "bold",
+                  fontSize: 25,
                 }}
               >
-                <Text
-                  style={{
-                    color: "#D7385E",
-                    fontWeight: "bold",
-                    fontSize: 20,
-                  }}
-                >
-                  Waiting to approval
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ flexDirection: "row", bottom: 0 }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#F4E8E7",
-                  height: 50,
-                  width: 150,
-                  borderRadius: 15,
-                  alignSelf: "center",
-                  justifyContent: "center",
-                  alignItems: "center",
-
-                  borderColor: "#D7385E",
-                  borderWidth: 2,
-                  marginLeft: 40,
-                  marginRight: 30,
-                  marginTop: 20,
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#D7385E",
-                    fontWeight: "bold",
-                    fontSize: 20,
-                  }}
-                  onPress={() => alertCancelOrder()}
-                >
-                  CENCLE!!
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#D7385E",
-                  height: 50,
-                  width: 150,
-                  borderRadius: 15,
-                  alignSelf: "center",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginRight: 50,
-                  marginTop: 20,
-                }}
-                onPress={() => navigation.navigate("SwapItemsScreen")}
-              >
-                <Text
-                  style={{
-                    color: "#fff",
-                    fontWeight: "bold",
-                    fontSize: 20,
-                  }}
-                >
-                  GO to Order
-                </Text>
-              </TouchableOpacity>
-            </View>
+                SWAP!!
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>

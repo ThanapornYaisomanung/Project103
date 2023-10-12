@@ -48,9 +48,9 @@ const Categories = ({ navigation }) => {
             <View style={{ flex: 1, flexDirection: "row", gap: 10 }}>
               {CatList.map((item) => (
                 <TouchableHighlight
-                  // onPress={() =>
-                  //   navigation.navigate("Infodonate", { id: item.id })
-                  // }
+                onPress={() =>
+                  navigation.navigate("ProductlistScreenFM" , { CatName: item.Name , Gender: item.Gender})
+                }
                   style={{ borderRadius: 25 }}
                   key={item.id}
                 >
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   contentCard: {
     flexDirection: "row",
     flexWrap: "wrap",
-    margin: 20,
+    margin: 10,
     gap: 10,
   },
   container: {

@@ -13,6 +13,7 @@ import Addpro from "../pages/Addpro";
 import AppProForm from "../pages/AppProForm";
 import Proswap from "../pages/Proswap";
 import Swap1 from "../pages/Swap1";
+import Swap12 from "../pages/Swap12";
 import Swap2 from "../pages/Swap2";
 import Swap3 from "../pages/Swap3";
 import My2love from "../pages/My2love";
@@ -20,6 +21,12 @@ import { TabViewNavigator } from "./TabViewNavigator";
 import ProfileScreen from "../pages/ProfileScreen";
 import { PostsScreen } from "../pages/PostsScreen";
 import ProductCardMe from "../component/ProductCardMe";
+import SwapSuccessScreen from "../pages/SwapSuccessScreen";
+import SwapItemsScreen from "../pages/SwapItemsScreen";
+import SwapItemsScreen2 from "../pages/SwapItemsScreen2";
+import SwapItemsScreen3 from "../pages/SwapItemsScreen3";
+import ProductlistScreenFM from "../pages/ProductlistScreenFM";
+import ProductlistScreenM from "../pages/ProductlistScreenM";
 
 const Stack = createStackNavigator();
 
@@ -61,6 +68,7 @@ const MainStackNavigator = () => {
       <Stack.Screen name="AppProForm" component={AppProForm} />
       <Stack.Screen name="Proswap" component={Proswap} />
       <Stack.Screen name="Swap1" component={Swap1} />
+      <Stack.Screen name="Swap12" component={Swap12} />
       <Stack.Screen name="Swap2" component={Swap2} />
       <Stack.Screen name="Swap3" component={Swap3} />
       <Stack.Screen name="My2love" component={My2love} />
@@ -68,6 +76,13 @@ const MainStackNavigator = () => {
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="PostsScreen" component={PostsScreen} />
       <Stack.Screen name="ProductCardMe" component={ProductCardMe} />
+      <Stack.Screen name="SwapSuccessScreen" component={SwapSuccessScreen} />
+      <Stack.Screen name="SwapItemsScreen" component={SwapItemsScreen} />
+      <Stack.Screen name="SwapItemsScreen2" component={SwapItemsScreen2} />
+      <Stack.Screen name="SwapItemsScreen3" component={SwapItemsScreen3} />
+      <Stack.Screen name="ProductlistScreenFM" component={ProductlistScreenFM} />
+      <Stack.Screen name="ProductlistScreenM" component={ProductlistScreenM} />
+
     </Stack.Navigator>
     );
   }
