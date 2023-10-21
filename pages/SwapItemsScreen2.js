@@ -124,7 +124,7 @@ export default function SwapItemsScreen2({ navigation }) {
             onPress={() => navigation.navigate("SwapItemsScreen")}
             title="รออนุมัติ"
           />
-          <Button onPress={() => navigation.navigate("")} title="ตอบรับ" />
+          <Button onPress={() => navigation.navigate("SwapItemsScreen2")} title="ตอบรับ" />
           <Button
             onPress={() => navigation.navigate("SwapItemsScreen3")}
             title="เสร็จสิ้น"
@@ -138,7 +138,7 @@ export default function SwapItemsScreen2({ navigation }) {
         ) : (
           <View style={styles.contentCard}>
             {SwapItems.map((item) => (
-              <View>
+              <View key={item.id}>
                 {item.PO_AgreeSwap == 0 ? (
                   <TouchableOpacity
                     onPress={() =>
@@ -147,7 +147,8 @@ export default function SwapItemsScreen2({ navigation }) {
                         ItemProductOwnerID: item.ItemProductOwner,
                         ProductOwnerID: item.ProductOwner,
                         SwapOwnerID: item.SwapOwner,
-                        ItemSwapOwnerID: item.ItemSwapOwner
+                        ItemSwapOwnerID: item.ItemSwapOwner,
+                        ProductOwnerSwap_Locations: item.ProductOwnerSwap_Locations
                       })
                     }
                     style={{ borderRadius: 25 }}

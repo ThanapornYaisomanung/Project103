@@ -144,7 +144,7 @@ export default function SwapItemsScreen({ navigation }) {
         ) : (
           <View style={styles.contentCard}>
             {SwapItems.map((item) => (
-              <View>
+              <View key={item.id}>
                 {item.PO_AgreeSwap == 0 ? (
                   <TouchableOpacity
                     onPress={() =>
@@ -154,6 +154,7 @@ export default function SwapItemsScreen({ navigation }) {
                         ProductOwnerID: item.ProductOwner,
                         SwapOwnerID: item.SwapOwner,
                         ItemSwapOwnerID: item.ItemSwapOwner,
+                        ProductOwnerSwap_Locations: item.ProductOwnerSwap_Locations
                       })
                     }
                     style={{ borderRadius: 25 }}

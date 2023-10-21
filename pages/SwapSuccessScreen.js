@@ -5,6 +5,7 @@ import {
   ScrollView,
   Image,
   Touchable,
+  ActivityIndicator,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -21,6 +22,9 @@ import {
 } from "firebase/firestore";
 import { db, addDoc } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import MapView from "react-native-maps";
+import { Marker } from "react-native-maps";
+import * as Location from "expo-location";
 
 export default function SwapSuccessScreen({ navigation, route }) {
   const ProductOwnerID = route.params.ProductOwnerID;
@@ -28,10 +32,16 @@ export default function SwapSuccessScreen({ navigation, route }) {
   const SwapItemsID = route.params.SwapItemsID;
   const SwapOwnerID = route.params.SwapOwnerID;
   const ItemSwapOwnerID = route.params.ItemSwapOwnerID;
+  const ProductOwnerSwap_Locations = route.params.ProductOwnerSwap_Locations;
 
   const [ProductOwner, setProductOwner] = useState([]);
   const [SwapOwner, setSwapOwner] = useState([]);
   const [ItemSwapOwner, setItemSwapOwner] = useState([]);
+  const [LocationToRec, setLocationToRec] = useState([]);
+  const [PlaceToRec, setPlaceToRec] = useState({
+    Latitude: 14.88239,
+    Longitude: 102.0204,
+  });
   const [ItemProductOwner, setItemProductOwner] = useState([]);
 
   const [UserMe, setUserMe] = useState("");
@@ -48,7 +58,7 @@ export default function SwapSuccessScreen({ navigation, route }) {
 
       const q = query(collection(db, "Users"), where("Email", "==", email));
       const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(async (doc) => {
         // console.log(doc.id, " => ", doc.data().Name);
         setUserMe(doc.data().Name);
         setUserMeId(doc.id);
@@ -144,6 +154,58 @@ export default function SwapSuccessScreen({ navigation, route }) {
   const fetchItemProductOwnerID = async (ItemProductOwnerID) => {
     const result = await getItemProductOwnerID(ItemProductOwnerID);
     setItemProductOwner(result);
+    // setLocationToRec(result.Locations);
+    // console.log(result.Locations);
+
+    // try {
+    //   const p = query(
+    //     collection(db, "Locations"),
+    //     where("Place", "==", result.Locations)
+    //   );
+    //   const querySnapshot = await getDocs(p);
+    //   querySnapshot.forEach(async (doc) => {
+    //     setPlaceToRec(doc.data());
+    //   });
+    // } catch (e) {
+    //   console.log(e);
+    // }
+  };
+
+  const getLocation = async (ProductOwnerSwap_Locations) => {
+    try {
+      const p = query(
+        collection(db, "Locations"),
+        where("Place", "==", ProductOwnerSwap_Locations)
+      );
+      const querySnapshot = await getDocs(p);
+      let ptr = null;
+      querySnapshot.forEach(async (doc) => {
+        ptr = doc.data();
+
+        // ptr.Latitude = Number(ptr.Latitude)
+        // ptr.Longitude = Number(ptr.Longitude)
+        setPlaceToRec(ptr);
+      });
+
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      // let text = JSON.stringify(location);
+      // setLocation(JSON.stringify(location.coords));
+      setLocationMe({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+
+      console.log("555");
+      return true;
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   //---------------------------------------------
@@ -236,12 +298,41 @@ export default function SwapSuccessScreen({ navigation, route }) {
     }
   };
 
+  const [location, setLocation] = useState(null);
+  const [locationMe, setLocationMe] = useState({
+    // latitude: 14.89281,
+    // longitude: 102.01434,
+  });
+  const [errorMsg, setErrorMsg] = useState(null);
+
   useEffect(() => {
+    // (async () => {
+    //   let { status } = await Location.requestForegroundPermissionsAsync();
+    //   if (status !== "granted") {
+    //     setErrorMsg("Permission to access location was denied");
+    //     return;
+    //   }
+    //   let location = await Location.getCurrentPositionAsync({});
+    //   // let text = JSON.stringify(location);
+    //   // setLocation(JSON.stringify(location.coords));
+    //   setLocationMe({
+    //     latitude: location.coords.latitude,
+    //     longitude: location.coords.longitude,
+    //   });
+
+    //   await getLocation(ProductOwnerSwap_Locations);
+    // })();
+
+    // console.log("อันนี้: locationMe", locationMe);
+    // console.log("อันนี้: PlaceToRec", PlaceToRec);
+    getLocation(ProductOwnerSwap_Locations);
     fetchSwapOwnerID(SwapOwnerID);
     fetchProductOwnerID(ProductOwnerID);
     fetchItemSwapOwnerID(ItemSwapOwnerID);
     fetchItemProductOwnerID(ItemProductOwnerID);
   }, []);
+
+console.log(locationMe.latitude);
 
   return (
     <View>
@@ -653,13 +744,79 @@ export default function SwapSuccessScreen({ navigation, route }) {
 
             {ItemProductOwner.Shipment == "Receive the product" ? (
               <View style={styles.map}>
-                <View
-                  style={{ height: 350, width: 370, backgroundColor: "#022" }}
-                ></View>
+                {PlaceToRec != "null" ||
+                PlaceToRec != [] ||
+                PlaceToRec != "undefined" ? (
+                  <MapView
+                    initialRegion={{
+                      latitude: PlaceToRec.Latitude
+                        ? PlaceToRec.Latitude
+                        : 14.88239,
+                      longitude: PlaceToRec.Longitude
+                        ? PlaceToRec.Longitude
+                        : 102.0204,
+                      latitudeDelta: 0.04,
+                      longitudeDelta: 0.02,
+                    }}
+                    style={{ height: 350, width: 370 }}
+                    minZoomLevel="2"
+                  >
+                    {locationMe != "null" ||
+                    locationMe != "undefined" ||
+                    locationMe != [] ||
+                    locationMe.length != 0 ? (
+                      <Marker
+                        coordinate={{
+                          latitude: locationMe.latitude
+                            ? locationMe.latitude
+                            : 0,
+                          longitude: locationMe.longitude
+                            ? locationMe.longitude
+                            : 0,
+                        }}
+                        pinColor={"#facc15"}
+                        title={"Me"}
+                      />
+                    ) : (
+                      <Marker
+                        coordinate={{
+                          latitude: 14.88239,
+                          longitude: 102.0204,
+                        }}
+                        pinColor={"#facc15"}
+                        title={"Me"}
+                      />
+                    )}
+
+                   
+
+                    <Marker
+                      coordinate={{
+                        latitude: PlaceToRec.Latitude ? PlaceToRec.Latitude : 0,
+                        longitude: PlaceToRec.Longitude ? PlaceToRec.Longitude : 0,
+                      }}
+                      title={PlaceToRec.Place}
+                    />
+                  </MapView>
+                ) : (
+                  // <View>
+                  //   <Text>{locationMe.latitude}, {locationMe.longitude}</Text>
+                  // </View>
+                  // <Text>{PlaceToRec.Latitude}</Text>
+                  <View
+                    style={{ justifyContent: "center", alignSelf: "center" }}
+                  >
+                    <ActivityIndicator size="large" color="#D7385E" />
+                  </View>
+                )}
               </View>
             ) : (
-              <View></View>
+              <View style={{ justifyContent: "center", alignSelf: "center" }}>
+                <ActivityIndicator size="large" color="#D7385E" />
+              </View>
             )}
+
+            <View style={{ marginTop: 50 }}></View>
           </View>
         </View>
       </ScrollView>

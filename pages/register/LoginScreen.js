@@ -15,8 +15,8 @@ import { passwordValidator } from "../helpers/passwordValidator";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export default function LoginScreen({ navigation }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("th@gmail.com");
+  const [password, setPassword] = useState("123456789");
   const [email2, setEmail2] = useState("");
   const [password2, setPassword2] = useState("");
   // const [email, setEmail] = useState({ value: '', error: '' })
@@ -103,7 +103,7 @@ export default function LoginScreen({ navigation }) {
       <TextInput
         label="Email"
         returnKeyType="next"
-        value={email.value}
+        value={email}
         onChangeText={(text) => setEmail(text)}
         // onChangeText={(text) => setEmail({ value: text, error: '' })}
         error={!!email.error}
@@ -116,7 +116,7 @@ export default function LoginScreen({ navigation }) {
       <TextInput
         label="Password"
         returnKeyType="done"
-        value={password.value}
+        value={password}
         onChangeText={(text) => setPassword(text)}
         // onChangeText={(text) => setPassword({ value: text, error: '' })}
         error={!!password.error}

@@ -27,6 +27,8 @@ import SwapItemsScreen2 from "../pages/SwapItemsScreen2";
 import SwapItemsScreen3 from "../pages/SwapItemsScreen3";
 import ProductlistScreenFM from "../pages/ProductlistScreenFM";
 import ProductlistScreenM from "../pages/ProductlistScreenM";
+import EditProswap from "../pages/EditProswap";
+import Editpro from "../pages/Editpro";
 
 const Stack = createStackNavigator();
 
@@ -82,6 +84,8 @@ const MainStackNavigator = () => {
       <Stack.Screen name="SwapItemsScreen3" component={SwapItemsScreen3} />
       <Stack.Screen name="ProductlistScreenFM" component={ProductlistScreenFM} />
       <Stack.Screen name="ProductlistScreenM" component={ProductlistScreenM} />
+      <Stack.Screen name="EditProswap" component={EditProswap} />
+      <Stack.Screen name="Editpro" component={Editpro} />
 
     </Stack.Navigator>
     );

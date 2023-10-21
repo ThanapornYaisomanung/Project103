@@ -16,7 +16,7 @@ import {
   getDoc,
   doc,
   getDocs,
-  updateDoc
+  updateDoc,
 } from "firebase/firestore";
 import { db, addDoc } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -29,9 +29,10 @@ export default function Swap12({ navigation, route }) {
   const [ProMeList, setProMeList] = useState([]);
   const [UserNameId, setUserNameId] = useState("");
   const [UserName, setUserName] = useState("");
+  const [SwapItemsId, setSwapItemsId] = useState("");
+
   const [UserMe, setUserMe] = useState("");
   const [UserMeId, setUserMeId] = useState("");
-  const [SwapItemsId, setSwapItemsId] = useState("");
 
   const auth = getAuth();
   onAuthStateChanged(auth, async (user) => {
@@ -127,6 +128,7 @@ export default function Swap12({ navigation, route }) {
         ItemProductOwner_NameProduct: donateList.NameProduct,
         ItemProductOwner_Size: donateList.Size,
         ItemProductOwner_Images: donateList.Images,
+        ProductOwnerSwap_Locations: donateList.Locations,
         SO_AgreeSwap: "1",
         PO_AgreeSwap: "0",
         CancelSwap: "0",
@@ -177,7 +179,7 @@ export default function Swap12({ navigation, route }) {
   console.log("คนที่เราไปขอแลก", UserNameId);
   console.log("เราที่แลก", UserMeId);
   console.log("Swap written with ID: ", SwapItemsId);
-  console.log(ProductId);
+  console.log(donateList.Locations);
 
   return (
     <View>

@@ -1,10 +1,21 @@
-import React, { useState } from "react";
-import { Text, View } from "react-native";
+import { Text, View, Alert } from "react-native";
 import SelectBox from "react-native-multi-selectbox";
 import { xorBy } from "lodash";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useEffect, useState } from "react";
+import {
+  collection,
+  query,
+  where,
+  getDoc,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
+import { db, addDoc } from "../firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 // ติดตั้้ง selectbox ด้วยเด้อ
 // npm i react-native-multi-selectbox
@@ -47,9 +58,88 @@ const K_OPTIONSS = [
   },
 ];
 function Prefernces({ navigation }) {
-  const [selectedTeam, setSelectedTeam] = useState({});
-  const [selectedTeams, setSelectedTeams] = useState([]);
-  console.log(selectedTeams);
+  const [selectedTeam, setSelectedTeam] = useState('');
+  const [selectedTeams, setSelectedTeams] = useState('');
+  const [selectedGender, setselectedGender] = useState([]);
+  const [selectedSize, setselectedSize] = useState([]);
+  const [UserMe, setUserMe] = useState("");
+  const [UserMeId, setUserMeId] = useState("");
+
+  const auth = getAuth();
+
+  // function getUser(){
+    onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const uid = user.uid;
+      const email = user.email;
+      // console.log("This account:", uid, email);
+
+      const q = query(collection(db, "Users"), where("Email", "==", email));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        setUserMe(doc.data().Name);
+        setUserMeId(doc.id);
+        setSelectedTeam(doc.data().Gender);
+        setSelectedTeams(doc.data().Size);
+      });
+    } else {
+      // User is signed out
+      alert(
+        "sign in Error!",
+        "Please log in to access the 2 love application again.",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]
+      );
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "StartScreen" }],
+      });
+    }
+  });
+  // }
+  
+
+  const SwapUpdate = async () => {
+    const SwapUpdateRef = doc(db, "Users", UserMeId);
+
+    await updateDoc(SwapUpdateRef, {
+      Gender: selectedGender.item,
+      Size: selectedSize.item,
+    });
+
+    try {
+      Alert.alert(
+        "Update My Preferences",
+        "Update you preferences have successfully.",
+        [
+          {
+            text: "OK",
+            //           const ProductOwnerID = route.params.ProductOwnerID;
+            // const ItemProductOwnerID = route.params.ItemProductOwnerID;
+            // const SwapItemsID = route.params.SwapItemsID;
+            // const SwapOwnerID = route.params.SwapOwnerID;
+            // const ItemSwapOwnerID = route.params.ItemSwapOwnerID;
+            // onPress: () =>
+            //   navigation.navigate("SwapSuccessScreen"),
+          },
+          // navigation.navigate("SwapSuccessScreen"),
+        ]
+      );
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
+  useEffect(() => {
+    // getUser()
+  }, []);
 
   return (
     <View>
@@ -67,17 +157,29 @@ function Prefernces({ navigation }) {
           </View>
         </View>
       </View>
-      
+
+      <View style={{ margin: 20 }}>
+        <Text style={styles.Textform}>
+          Your Gender:{" "}
+          {selectedTeam == "Women" ||
+          selectedTeam == "Men" ||
+          selectedTeam == "Others"
+            ? selectedTeam
+            : "null"}
+        </Text>
+        <Text style={styles.Textform}>Your Size: {selectedTeams == 'S' || selectedTeams == 'M' || selectedTeams == 'L' || selectedTeams == 'XL' ||selectedTeams == 'XXL' ? selectedTeams : 'null'}</Text>
+      </View>
+
       <View style={{ margin: 20 }}>
         <Text style={styles.Textform}>I’m looking for sometimg for :</Text>
         <SelectBox
           label="Select single"
           options={K_OPTIONS}
-          value={selectedTeam}
+          value={selectedGender}
           onChange={onChange()}
-          toggleIconColor='#D7385E'
-          arrowIconColor='#D7385E'
-          searchIconColor='#D7385E'
+          toggleIconColor="#D7385E"
+          arrowIconColor="#D7385E"
+          searchIconColor="#D7385E"
           // hideInputFilter={false}
         />
       </View>
@@ -85,19 +187,26 @@ function Prefernces({ navigation }) {
       <View style={{ margin: 20 }}>
         <Text style={styles.Textform}>Size :</Text>
         <SelectBox
-          label="Select multiple"
+          label="Select single"
           options={K_OPTIONSS}
-          selectedValues={selectedTeams}
-          toggleIconColor='#D7385E'
-          arrowIconColor='#D7385E'
-          searchIconColor='#D7385E'
-          multiOptionContainerStyle={{backgroundColor:'#D7385E'}}
-          multiOptionsLabelStyle={{fontSize:14, padding:5}}
+          value={selectedSize}
+          onChange={onChange2()}
+          toggleIconColor="#D7385E"
+          arrowIconColor="#D7385E"
+          searchIconColor="#D7385E"
+
+          // label="Select multiple"
+          // options={K_OPTIONSS}
+          // selectedValues={selectedTeams}
+          // toggleIconColor='#D7385E'
+          // arrowIconColor='#D7385E'
+          // searchIconColor='#D7385E'
+          // multiOptionContainerStyle={{backgroundColor:'#D7385E'}}
+          // multiOptionsLabelStyle={{fontSize:14, padding:5}}
           // containerStyle={{height:60}}
-          onMultiSelect={onMultiChange()}
-          onTapClose={onMultiChange()}
-          isMulti
-          
+          // onMultiSelect={onMultiChange()}
+          // onTapClose={onMultiChange()}
+          // isMulti
         />
       </View>
 
@@ -111,8 +220,8 @@ function Prefernces({ navigation }) {
             alignSelf: "center",
             justifyContent: "center",
             alignItems: "center",
-            
           }}
+          onPress={() => SwapUpdate()}
         >
           <Text
             style={{
@@ -127,12 +236,15 @@ function Prefernces({ navigation }) {
       </View>
     </View>
   );
-  function onMultiChange() {
-    return (item) => setSelectedTeams(xorBy(selectedTeams, [item], "id"));
-  }
+  // function onMultiChange() {
+  //   return (item) => setSelectedTeams(item);
+  // }
 
   function onChange() {
-    return (val) => setSelectedTeam(val);
+    return (val) => setselectedGender(val);
+  }
+  function onChange2() {
+    return (val) => setselectedSize(val);
   }
 }
 export default Prefernces;
@@ -170,7 +282,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#D7385E",
     marginTop: 20,
-    marginBottom:10
+    marginBottom: 10,
   },
   //   Form:{
   //     height:44,

@@ -13,6 +13,7 @@ import { useState } from "react";
 
 export default function ProfileScreen({ navigation }) {
 const [UserName, setUserName] = useState('');
+const [UserID, setUserID] = useState('');
 
   const auth = getAuth();
   onAuthStateChanged(auth, async (user) => {
@@ -26,6 +27,7 @@ const [UserName, setUserName] = useState('');
       querySnapshot.forEach((doc) => {
         // console.log(doc.id, " => ", doc.data().Name);
         setUserName(doc.data().Name);
+        setUserID(doc.id);
       });
       
     } else {
@@ -49,7 +51,7 @@ const [UserName, setUserName] = useState('');
     }
 
   });
-  
+  console.log(UserID);
 
   return (
     // style={styles.scrollView}
@@ -67,7 +69,7 @@ const [UserName, setUserName] = useState('');
             name="create-outline"
             size={30}
             color={"white"}
-            onPress={() => navigation.navigate("EditScreen")}
+            onPress={() => navigation.navigate("EditScreen", {UserID:UserID})}
           ></Ionicons>
         </View>
 

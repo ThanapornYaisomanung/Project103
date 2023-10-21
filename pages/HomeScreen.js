@@ -33,7 +33,7 @@ export default function HomeScreen({ navigation }) {
     const CatListCol = query(
       collection(db, "Category"),
       limit(4),
-      where("Gender", "==", "Female")
+      where("Gender", "==", "Women")
     );
     const CatListSnapshot = await getDocs(CatListCol);
     setCatList(

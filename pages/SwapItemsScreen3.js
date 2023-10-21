@@ -139,7 +139,7 @@ console.log(SwapItemsOwner);
             onPress={() => navigation.navigate("SwapItemsScreen")}
             title="รออนุมัติ"
           />
-          <Button onPress={() => navigation.navigate("")} title="ตอบรับ" />
+          <Button onPress={() => navigation.navigate("SwapItemsScreen2")} title="ตอบรับ" />
           <Button
             onPress={() => navigation.navigate("SwapItemsScreen3")}
             title="เสร็จสิ้น"
@@ -148,7 +148,6 @@ console.log(SwapItemsOwner);
 
         {SwapItems.length == null || SwapItems.length === 0 ? (
           <View>
-           
           </View>
         ) : (
           <View style={styles.contentCard}>
@@ -162,7 +161,8 @@ console.log(SwapItemsOwner);
                         ItemProductOwnerID: item.ItemProductOwner,
                         ProductOwnerID: item.ProductOwner,
                         SwapOwnerID: item.SwapOwner,
-                        ItemSwapOwnerID: item.ItemSwapOwner
+                        ItemSwapOwnerID: item.ItemSwapOwner,
+                        ProductOwnerSwap_Locations: item.ProductOwnerSwap_Locations
                       })
                     }
                     style={{ borderRadius: 25 }}
@@ -199,7 +199,8 @@ console.log(SwapItemsOwner);
                         ItemProductOwnerID: item.ItemProductOwner,
                         ProductOwnerID: item.ProductOwner,
                         SwapOwnerID: item.SwapOwner,
-                        ItemSwapOwnerID: item.ItemSwapOwner
+                        ItemSwapOwnerID: item.ItemSwapOwner,
+                        ProductOwnerSwap_Locations: item.ProductOwnerSwap_Locations
                       })
                     }
                     style={{ borderRadius: 25 }}

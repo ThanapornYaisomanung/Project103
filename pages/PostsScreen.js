@@ -80,7 +80,7 @@ const PostsScreen = ({ navigation }) => {
           <View style={styles.contentCard}>
             {CatList.map((item) => (
               <TouchableOpacity
-                onPress={() => navigation.navigate("Proswap", { id: item.id })}
+                onPress={() => navigation.navigate("EditProswap", { id: item.id })}
                 style={{ borderRadius: 25 }}
                 key={item.id}
               >

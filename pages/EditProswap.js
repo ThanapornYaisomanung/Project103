@@ -26,7 +26,7 @@ import {
 import { db ,  addDoc} from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-export default function Proswap({ navigation, route }) {
+export default function EditProswap({ navigation, route }) {
   const Donatesid = route.params.id;
   // console.log(Donatesid);
   const [donateList, setDonateList] = useState([]);
@@ -160,7 +160,15 @@ export default function Proswap({ navigation, route }) {
             color={"white"}
             onPress={() => navigation.goBack()}
           ></Ionicons>
+
           <Text style={styles.TextHead}>2LOVE SWAP</Text>
+
+          <Ionicons
+            name="create-outline"
+            size={30}
+            color={"white"}
+            onPress={() => navigation.navigate('Editpro', { ProductID: Donatesid })}
+          ></Ionicons>
         </View>
       </View>
 
@@ -468,9 +476,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingTop: 5,
+    justifyContent:'space-between'
   },
   TextHead: {
-    marginLeft: 110,
+    // marginLeft: 110,
     fontSize: 20,
     fontWeight: "bold",
     color: "#fff",
