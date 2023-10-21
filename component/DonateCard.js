@@ -1,19 +1,19 @@
 import { SafeAreaView, Text, View, StyleSheet, Image } from "react-native";
 
-export default function DonateCard() {
+export default function DonateCard(props) {
   return (
     <View style={styles.container}>
         <Image
         style={styles.Logo}
         source={{
-          uri: 'https://scontent.fbkk29-1.fna.fbcdn.net/v/t39.30808-6/277156778_10158465141900009_2579371030611267744_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=a2f6c7&_nc_eui2=AeGEzI7k-IKZTkD69uqEeJHlJ-GFf5s_yYYn4YV_mz_JhsAbuddmxPLf0C4Jjx0YwTIw_Ybm14TR1rTHNwJlp828&_nc_ohc=ZDg_fTRbhGMAX_wlerf&_nc_ht=scontent.fbkk29-1.fna&oh=00_AfARnvzL5mvkmTpnFCoGARXuiGroDpc0tbMQFl0d5D4daw&oe=650FABEA',
+          uri: props.Images,
         }}
       />
       <Text style={styles.paragraph}>
-      ProductCard 
+      {props.Name}
       </Text>
       <Text style={styles.paragraph2}>
-      $999
+      {props.Id}
       </Text>
     </View>
   );

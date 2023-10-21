@@ -1,15 +1,22 @@
 import { SafeAreaView, Text, View, StyleSheet, Image } from "react-native";
 
-export default function CategoriesCard() {
+export default function CategoriesCard(props) {
   return (
     <View style={styles.container}>
         <Image
         style={styles.Image}
-        source={require('../assets/ImagesCatCard/T-Shirts.png')}
+        source={{
+          uri: props.Icons
+        }}
       />
       <Text style={styles.paragraph}>
-      Tops and T-Shirts
+      {/* Tops and T-Shirts */}
+      {props.Name}
       </Text>
+       {/*<Text style={styles.paragraph}>
+      Tops and T-Shirts 
+      {props.Gender}
+      </Text>*/}
       <Text style={styles.paragraph2}>
       265 items 
       </Text>
@@ -40,7 +47,10 @@ const styles = StyleSheet.create({
     color:'#6b7280'
   },
   Image:{
-    width:100,
-    height:100
+    width:50,
+    height:50,
+    marginLeft: 20,
+    marginTop:20,
+    marginBottom:10
   },
 });

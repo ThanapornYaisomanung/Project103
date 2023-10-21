@@ -6,33 +6,9 @@ import { ReviewsScreen } from '../pages/ReviewsScreen';
 import { PostsScreen } from '../pages/PostsScreen';
 import { FollowingScreen } from '../pages/FollowingScreen';
 
-function FeedScreen() {
-  return (
-    <View style={{justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Feed!</Text>
-    </View>
-  );
-}
-
-function NotificationsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Notifications!</Text>
-    </View>
-  );
-}
-
-function ProfileScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Profile!</Text>
-    </View>
-  );
-}
-
 const Tab = createMaterialTopTabNavigator();
 
-function MyTabs() {
+function MyTabs({ navigation }) {
   return (
     <Tab.Navigator
       initialRouteName="Feed" 
@@ -54,7 +30,6 @@ function MyTabs() {
         name="Posts"
         component={PostsScreen}
         options={{ tabBarLabel: 'Posts' }}
-        
       />
       <Tab.Screen
         name="Reviews"
@@ -70,7 +45,7 @@ function MyTabs() {
   );
 }
 
-const TabViewNavigator = () => {
+const TabViewNavigator = ({ navigation }) => {
   return (
 
       <MyTabs />

@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { Text, View ,StyleSheet, ScrollView} from 'react-native';
 import ProductCard from "../component/ProductCard";
-
+import Reviewcard from '../component/Reviewcard';
 
 const ReviewsScreen = () => {
   return (
     <View style={{justifyContent: 'center', alignItems: 'center' }}>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
       <ScrollView>
-        <Text style={styles.TextHead}>ReviewsScreen</Text>
+        {/* <Text style={styles.TextHead}>ReviewsScreen</Text> */}
         <View style={styles.contentCard}>
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          <Reviewcard />
+          <Reviewcard />
+          <Reviewcard />
+          <Reviewcard />
+          <Reviewcard />
         </View>
       </ScrollView>
     </View>

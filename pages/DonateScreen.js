@@ -1,15 +1,76 @@
-import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  TouchableHighlight,
+} from "react-native";
 import SearchBar from "../component/SearchBar";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import DonateCard from "../component/DonateCard";
+import {
+  collection,
+  query,
+  orderBy,
+  startAfter,
+  limit,
+  getDocs,
+} from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { db } from "../firebase";
 
-export default function DonateScreen({navigation}) {
+export default function DonateScreen({ navigation }) {
+  onLearnMore = (user) => {
+    this.props.navigation.navigate("Infodonate", { ...user });
+  };
+
+  const [donateList, setDonateList] = useState([]);
+
+  const getDonateList = async () => {
+    const shoppingCol = query(collection(db, "Donates"));
+    const shoppingSnapshot = await getDocs(shoppingCol);
+    setDonateList(
+      shoppingSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    );
+  };
+
+  useEffect(() => {
+    getDonateList();
+  }, []);
+
+  // const getDonate = async () => {
+  //   const first = query(collection(db, "Donates"), orderBy("Name"), limit(2));
+  //   const documentSnapshots = await getDocs(first);
+
+  //   const lastVisible =
+  //     documentSnapshots.docs[documentSnapshots.docs.length - 1];
+  //     console.log("last =>", lastVisible);
+
+  //   const next = query(
+  //     collection(db, "Donates"),
+  //     orderBy("Name"),
+  //     startAfter(lastVisible),
+  //     limit(2)
+  //   );
+
+  //   console.log("next =>", next);
+
+  // };
+
+  // console.log(donateList.length);
+
   return (
     <ScrollView style={styles.scrollView}>
-      
       <View style={styles.Topbar}>
         <View style={styles.SubTopbar1}>
-          <Ionicons name="menu-outline" size={30} color={"white"} onPress={() => navigation.openDrawer()}></Ionicons>
+          <Ionicons
+            name="menu-outline"
+            size={30}
+            color={"white"}
+            onPress={() => navigation.openDrawer()}
+          ></Ionicons>
           <SearchBar style={styles.searchBar} />
           <Ionicons
             name="heart-outline"
@@ -21,57 +82,40 @@ export default function DonateScreen({navigation}) {
 
         <View style={styles.SubTopbar}>
           <Text style={styles.Text}>Welcome to ...</Text>
-          <Text style={styles.Text}>           2LOVED DONATE</Text>
+          <Text style={styles.Text}> 2LOVED DONATE</Text>
         </View>
       </View>
 
-      {/* <View style={styles.Topbar}>
-        <View style={styles.SubTopbar}>
-            <Ionicons name="menu-outline" size={30} color={"white"}></Ionicons>
-        
-        <SearchBar style={styles.searchBar} />
-        <Ionicons
-          name="heart-outline"
-          size={30}
-          color={"white"}
-        ></Ionicons>
+      {donateList.length == 0 ? (
+        <View style={styles.container}>
+          <ActivityIndicator size="large" color="#D7385E" />
         </View>
-        
-        <View style={styles.Text}>
-                  <Text style={styles.Text}>Welcome to ...</Text>
-      <Text style={styles.Text}>           2LOVED DONATE</Text>
-
+      ) : (
+        <View style={styles.contentCard}>
+          {donateList.map((item) => (
+            <TouchableHighlight
+              onPress={() => navigation.navigate("Infodonate", { Id: item.id })}
+              style={{ borderRadius: 25 }}
+              key={item.id}
+            >
+              <DonateCard Name={item.Name} Images={item.Images}></DonateCard>
+            </TouchableHighlight>
+          ))}
         </View>
-      </View> */}
-
-      {/* <SwipeSlide></SwipeSlide> */}
-
-      {/* <Text style={styles.text}>Recommend</Text> */}
-      <View style={styles.list}>
-        <DonateCard style={styles.card}></DonateCard>
-        <DonateCard style={styles.card}></DonateCard>
-        <DonateCard style={styles.card}></DonateCard>
-        <DonateCard style={styles.card}></DonateCard>
-        <DonateCard style={styles.card}></DonateCard>
-        <DonateCard style={styles.card}></DonateCard>
-      </View>
+      )}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    padding: 200,
   },
   list: {
-    flex: 1,
-    flexDirection: "column",
-    margin: 20,
+    flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
-    alignContent: "space-between",
-    maxHeight: 750,
-    maxWidth: 500,
+    margin: 20,
+    gap: 10,
   },
   scrollView: {},
   text: {
@@ -86,11 +130,13 @@ const styles = StyleSheet.create({
   Topbar: {
     // padding: 10,
     // paddingTop: 25,
+    top: 0,
+    left: 0,
 
     backgroundColor: "#D7385E",
     // borderBottomLeftRadius: 25,
     // borderBottomRightRadius: 25,
-    // height:200
+    height: 154,
   },
   SubTopbar1: {
     padding: 10,
@@ -104,7 +150,7 @@ const styles = StyleSheet.create({
   SubTopbar: {
     flex: 1,
     paddingLeft: 10,
-    paddingBottom:10
+    paddingBottom: 10,
   },
   Text: {
     flex: 1,
@@ -116,5 +162,11 @@ const styles = StyleSheet.create({
   },
   ViewText: {
     marginTop: 2,
+  },
+  contentCard: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    margin: 20,
+    gap: 10,
   },
 });

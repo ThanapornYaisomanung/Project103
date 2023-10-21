@@ -6,6 +6,8 @@ import NotificationsScreen from '../pages/NotificationsScreen';
 import { CustomDrawer } from './CustomDrawerNavigator';
 import StartScreen from '../pages/register/StartScreen'
 import { ButtonLogout } from '../component/ButtomLogout';
+import Prefernces from '../pages/Prefernces';
+import SwapItemsScreen from '../pages/SwapItemsScreen';
 
 // function logout(){
 //   return(
@@ -42,6 +44,8 @@ const DrawerNavigator = () => {
       >
         <Drawer.Screen name="Home" component={MainStackNavigator} />
         <Drawer.Screen name="Notifications" component={NotificationsScreen} />
+        <Drawer.Screen name="Prefernces" component={Prefernces} />
+        <Drawer.Screen name="SwapI tems" component={SwapItemsScreen} />
         <Drawer.Screen name="Logout" component={ButtonLogout} />
   
         

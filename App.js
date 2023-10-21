@@ -7,7 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 export default function App() {
   return (
     <SafeAreaProvider>
-       <SplashScreen></SplashScreen> 
+       <SplashScreen></SplashScreen>
     </SafeAreaProvider>
   )
 }

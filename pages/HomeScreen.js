@@ -1,20 +1,50 @@
-import { View, Text, Image, StyleSheet, ScrollView , Link} from "react-native";
-import { Button } from "../component/Theme";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import SearchBar from "../component/SearchBar";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SwipeSlide from "../component/SwipeSlide";
 import ProductCard from "../component/ProductCard";
+import { Categories } from "../component/Categories";
 import CategoriesCard from "../component/CategoriesCard";
-
-function DonateScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Donate!</Text>
-    </View>
-  );
-}
+import { collection, query, getDocs, limit, where } from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { db } from "../firebase";
 
 export default function HomeScreen({ navigation }) {
+  const [PosList, setPosList] = useState([]);
+  const getPosList = async () => {
+    const PosListCol = query(collection(db, "Products"), limit(10));
+    const PosListSnapshot = await getDocs(PosListCol);
+    setPosList(
+      PosListSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    );
+  };
+
+
+  const [CatList, setCatList] = useState([]);
+  const getCatList = async () => {
+    const CatListCol = query(
+      collection(db, "Category"),
+      limit(4),
+      where("Gender", "==", "Women")
+    );
+    const CatListSnapshot = await getDocs(CatListCol);
+    setCatList(
+      CatListSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    );
+  };
+  useEffect(() => {
+    getPosList();
+    getCatList();
+  }, []);
+
   return (
     <ScrollView style={styles.scrollView}>
       {/* หัว */}
@@ -37,10 +67,56 @@ export default function HomeScreen({ navigation }) {
       {/* branner */}
       <SwipeSlide></SwipeSlide>
 
-            
       {/* Categories */}
+      {/* หัวข้อ */}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Text style={styles.text}>Categories</Text>
+        <Text
+          style={styles.textSub}
+          onPress={() => navigation.navigate("CatagoriesScreen")}
+        >
+          More
+        </Text>
+      </View>
+      {/* <Categories /> */}
       <View>
-        {/* หัวข้อ */}
+      {CatList.length == 0 ? (
+        <View style={styles.container}>
+          <ActivityIndicator size="large" color="#D7385E" />
+        </View>
+      ) : (
+        <View style={{ margin: 10 }}>
+          <ScrollView horizontal={true}>
+            <View style={{ flex: 1, flexDirection: "row", gap: 10 }}>
+              {CatList.map((item) => (
+                <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ProductlistScreenFM" , { CatName: item.Name , Gender: item.Gender})
+                }
+                  style={{ borderRadius: 25 }}
+                  key={item.id}
+                >
+                  <CategoriesCard
+                    Icons={item.Icons}
+                    Name={item.Name}
+                    Gender={item.Gender}
+                  ></CategoriesCard>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+      )}
+    </View>
+
+      {/* Recommend */}
+      <View>
         <View
           style={{
             flexDirection: "row",
@@ -48,45 +124,28 @@ export default function HomeScreen({ navigation }) {
             alignItems: "center",
           }}
         >
-          <Text style={styles.text}>Categories</Text>
-          <Text style={styles.textSub} onPress={() => navigation.navigate("FavoriteScreen")}>More</Text>
+          <Text style={styles.text}>Recommend</Text>
+          {/* <Text style={styles.textSub} onPress={() => navigation.navigate("FavoriteScreen")}>More</Text> */}
         </View>
 
-        <View style={{ margin: 10 }}>
-          <ScrollView horizontal={true}>
-            <View style={{flex:1, flexDirection:'row', gap:10}}>
-              <CategoriesCard />
-              <CategoriesCard />
-              <CategoriesCard />
-              <CategoriesCard />
-            </View>
-          </ScrollView>
+        <View style={styles.contentCard}>
+          {PosList.map((item) => (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Proswap", { id: item.id })}
+              style={{ borderRadius: 25 }}
+              key={item.id}
+            >
+              <ProductCard
+                NameProduct={item.NameProduct}
+                Size={item.Size}
+                Images={item.Images}
+              />
+              {/* <Text>{}</Text> */}
+            </TouchableOpacity>
+          ))}
         </View>
       </View>
-
-      {/* Recommend */}
-      <View>
-      <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-                  <Text style={styles.text}>Recommend</Text>
-        <Text style={styles.textSub} onPress={() => navigation.navigate("FavoriteScreen")}>More</Text>
-
-        </View>
-
-            <View style={styles.contentCard}>
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-            </View>
-      </View>
-      
     </ScrollView>
   );
 }
