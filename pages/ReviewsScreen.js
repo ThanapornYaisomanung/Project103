@@ -14,7 +14,7 @@ const ReviewsScreen = () => {
           <Reviewcard />
           <Reviewcard />
           <Reviewcard />
-          <Reviewcard />
+          <Reviewcard /> 
         </View>
       </ScrollView>
     </View>

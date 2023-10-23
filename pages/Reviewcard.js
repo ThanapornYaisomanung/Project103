@@ -1,6 +1,7 @@
 import { SafeAreaView, Text, View, StyleSheet, Image } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-export default function Reviewcard() {
+
+const Reviewcard = () => {
   return (
        <View style={{flexDirection: 'row',flexWrap: 'wrap',}}>
        
@@ -63,6 +64,8 @@ export default function Reviewcard() {
 
   );
 }
+
+export {Reviewcard}
 
 const styles = StyleSheet.create({
   container: {

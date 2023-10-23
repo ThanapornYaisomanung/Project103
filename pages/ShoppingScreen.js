@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import SearchBar from "../component/SearchBar";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -26,8 +27,23 @@ export default function ShoppingScreen({ navigation }) {
     );
   };
 
+  const [CatList, setCatList] = useState([]);
+  const getCatList = async () => {
+    const CatListCol = query(
+      collection(db, "Category"),
+      limit(4),
+      where("Gender", "==", "Women")
+    );
+    const CatListSnapshot = await getDocs(CatListCol);
+    setCatList(
+      CatListSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    );
+  };
+
+
   useEffect(() => {
     getPosList();
+    getCatList();
   }, []);
   return (
     <View>
@@ -75,7 +91,40 @@ export default function ShoppingScreen({ navigation }) {
               More
             </Text>
           </View>
-          <Categories />
+          {/* <Categories /> */}
+
+          <View>
+            {CatList.length == 0 ? (
+              <View style={styles.container}>
+                <ActivityIndicator size="large" color="#D7385E" />
+              </View>
+            ) : (
+              <View style={{ margin: 10 }}>
+                <ScrollView horizontal={true}>
+                  <View style={{ flex: 1, flexDirection: "row", gap: 10 }}>
+                    {CatList.map((item) => (
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate("ProductlistScreenFM", {
+                            CatName: item.Name,
+                            Gender: item.Gender,
+                          })
+                        }
+                        style={{ borderRadius: 25 }}
+                        key={item.id}
+                      >
+                        <CategoriesCard
+                          Icons={item.Icons}
+                          Name={item.Name}
+                          Gender={item.Gender}
+                        ></CategoriesCard>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </ScrollView>
+              </View>
+            )}
+          </View>
         </View>
 
         <Text style={styles.text}>My Feed</Text>
