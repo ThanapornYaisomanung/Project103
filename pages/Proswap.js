@@ -6,7 +6,7 @@ import {
   Image,
   Touchable,
   ActivityIndicator,
-  Alert
+  Alert,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ProductCard from "../component/ProductCard";
@@ -23,7 +23,7 @@ import {
   getDocs,
   deleteDoc,
 } from "firebase/firestore";
-import { db ,  addDoc} from "../firebase";
+import { db, addDoc } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function Proswap({ navigation, route }) {
@@ -34,6 +34,7 @@ export default function Proswap({ navigation, route }) {
   const [UserName, setUserName] = useState("");
   const [favData, setFavData] = useState("");
   const [favDataID, setFavDataID] = useState("");
+  const [selectedValue, setSelectedValue] = useState("");
 
   const auth = getAuth();
   onAuthStateChanged(auth, async (user) => {
@@ -48,8 +49,6 @@ export default function Proswap({ navigation, route }) {
         // console.log(doc.id, " => ", doc.data().Name);
         // console.log(doc.id, " => ", doc.id);
         setUserId(doc.id);
-
-        
       });
     } else {
       // User is signed out
@@ -90,21 +89,18 @@ export default function Proswap({ navigation, route }) {
 
   const getFavById = async (Donatesid) => {
     const q = query(collection(db, "fav"), where("Pro_ID", "==", Donatesid));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        setFavData(doc.data());
-        setFavDataID(doc.id);
-      });
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      setFavData(doc.data());
+      setFavDataID(doc.id);
+    });
   };
-
-
-  
 
   async function fav() {
     try {
       const docRef = await addDoc(collection(db, "fav"), {
         UserName: UserId,
-        Fav: 'fav',
+        Fav: "fav",
         Pro_ID: donateList.id,
         Pro_NameProduct: donateList.NameProduct,
         Pro_Size: donateList.Size,
@@ -112,33 +108,31 @@ export default function Proswap({ navigation, route }) {
       });
       alert("Add To Favorite");
       console.log(docRef.id);
+
+      setSelectedValue("fav");
+
     } catch (e) {
       console.error("error", e);
     }
   }
-  
+
   async function unfav() {
-    console.log('canceled the swap ID: ', favDataID);
+    console.log("canceled the swap ID: ", favDataID);
     await deleteDoc(doc(db, "fav", favDataID));
 
     try {
-      Alert.alert(
-        "Unfavorite!!",
-        "You have successfully to unfavorite.",
-        [
-          {
-            text: "OK",
-            onPress: () => navigation.navigate("Proswap", { id: Donatesid })
-          },
-          navigation.navigate("Proswap", { id: Donatesid })
-
-        ]
-      );
+      Alert.alert("Unfavorite!!", "You have successfully to unfavorite.", [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("Proswap", { id: Donatesid }),
+        },
+        navigation.navigate("Proswap", { id: Donatesid }),
+      ]);
+      setSelectedValue("unfav");
     } catch (e) {
       console.error("Error adding document: ", e);
     }
-  };
-
+  }
 
 
   useEffect(() => {
@@ -147,7 +141,7 @@ export default function Proswap({ navigation, route }) {
     getFavById(Donatesid);
   }, []);
 
-  console.log(favData.Fav);
+  console.log(selectedValue);
 
   return (
     <View>
@@ -227,24 +221,28 @@ export default function Proswap({ navigation, route }) {
                 zIndex: 9999,
               }}
             >
-              {
-                favData.Fav != 'fav' ?
-                <Ionicons
-                  name="heart-outline"
-                  size={30}
-                  color={"#fff"}
-                  onPress={() => fav()}
-                ></Ionicons>
-                :
+              {favData.Fav != "fav" ? (
                 <Ionicons
                   name="heart"
                   size={30}
-                  color={"#f00"}
-                  onPress={() => unfav()}
+                  onPress={() => fav()}
+                  style={[
+                    styles.button,
+                    selectedValue === "fav" && styles.selected,
+                  ]}
                 ></Ionicons>
-              }
-                
-              
+              ) : (
+                <Ionicons
+                  name="heart"
+                  size={30}
+                  // color={"#f00"}
+                  onPress={() => unfav()}
+                  style={[
+                    styles.selected,
+                    selectedValue === "unfav" && styles.button,
+                  ]}
+                ></Ionicons>
+              )}
             </View>
           </View>
 
@@ -520,17 +518,9 @@ const styles = StyleSheet.create({
     paddingTop: 350,
   },
   button: {
-    borderWidth: 2,
-    padding: 10,
-    borderRadius: 10,
-    borderColor: "#D9D9D9",
-    backgroundColor: "#fff",
+    color: "#fff",
   },
   selected: {
-    borderWidth: 2,
-    padding: 10,
-    borderRadius: 10,
-    borderColor: "#007E00",
-    backgroundColor: "#C9FFC4",
+    color: "#f00",
   },
 });
