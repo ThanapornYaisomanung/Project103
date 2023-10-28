@@ -1,8 +1,6 @@
 import { SafeAreaView, Text, View, StyleSheet, Image } from "react-native";
 
 export default function ProductCard(props) {
-  // const UID = props;
-  // console.log("อิสัสได้สักที => ", UID);
 
   return (
     <View style={styles.container}>

@@ -12,20 +12,3 @@ export default function App() {
   )
 }
 
-// -------------------------------------
-
-
-// import * as React from "react";
-// import { Text, View, StyleSheet, SafeAreaView ,ScrollView  } from "react-native";
-// import { NavigationContainer } from "@react-navigation/native";
-// import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-// import { DrawerNavigator } from "./navigation/DrawerNavigator";
-
-// export default function App() {
-//   return (
-    
-//     <NavigationContainer >
-//       <DrawerNavigator/>
-//     </NavigationContainer>
-//   );
-// }
