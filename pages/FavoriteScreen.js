@@ -58,20 +58,11 @@ export default function FavoriteScreen({ navigation }) {
     });
   }
 
-  // const getFavById = async () => {
-  //   const q = query(collection(db, "fav"), where("UserName", "==", UserId));
-  //   const querySnapshot = await getDocs(q);
-
-  //   setFavData(
-  //     querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-  //   );
-  // };
 
   useEffect(() => {
     getUser();
   }, []);
 
-  console.log("อันนี้", favData);
 
   return (
     <View>

@@ -203,8 +203,6 @@ export default function Swap2({ navigation, route }) {
     fetchProductMeById(idMepro);
   }, []);
 
-  // console.log('คนที่เราไปขอแลก', UserNameId);
-  // console.log('เราที่แลก', UserMeId);
 
   return (
     <View>

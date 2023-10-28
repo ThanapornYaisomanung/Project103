@@ -35,7 +35,6 @@ export default function ProductlistScreenM({ navigation, route }) {
     getPosList();
   }, []);
 
-  console.log("อันนี้", Gender);
   return (
     <ScrollView style={styles.scrollView}>
       {/* หัว */}

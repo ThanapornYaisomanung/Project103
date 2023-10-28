@@ -89,51 +89,6 @@ export default function RegisterScreen({ navigation }) {
     }
   };
 
-  // const onSignUpPressed = async () => {
-  //   const auth = getAuth();
-  //   createUserWithEmailAndPassword(auth, email, password)
-  //     .then((userCredential) => {
-  //       // Signed in
-  //       const user = userCredential.user;
-  //       console.log(user);
-  //     })
-  //     .catch((error) => {
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       console.log(error);
-  //     });
-
-  //   try {
-  //     const docRef = await addDoc(collection(db, "Users"), {
-  //       Name: name,
-  //       Email: email,
-  //       Password: password,
-  //       Roles: "user",
-  //     });
-  //     console.log("Document written with ID: ", docRef.id);
-
-  //     alert(
-  //       "sign up account success!",
-  //       "Please log in to access the 2love application.",
-  //       [
-  //         {
-  //           text: "Cancel",
-  //           onPress: () => console.log("Cancel Pressed"),
-  //           style: "cancel",
-  //         },
-  //         { text: "OK", onPress: () => console.log("OK Pressed") },
-  //       ]
-  //     );
-
-  //     navigation.reset({
-  //       index: 0,
-  //       routes: [{ name: "StartScreen" }],
-  //     });
-  //   } catch (e) {
-  //     console.error("Error adding document: ", e);
-  //   }
-  // };
-
   return (
     <ScrollView style={{ width: 400 }}>
       {/* <Background> */}

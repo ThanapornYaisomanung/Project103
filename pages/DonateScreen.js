@@ -40,26 +40,6 @@ export default function DonateScreen({ navigation }) {
     getDonateList();
   }, []);
 
-  // const getDonate = async () => {
-  //   const first = query(collection(db, "Donates"), orderBy("Name"), limit(2));
-  //   const documentSnapshots = await getDocs(first);
-
-  //   const lastVisible =
-  //     documentSnapshots.docs[documentSnapshots.docs.length - 1];
-  //     console.log("last =>", lastVisible);
-
-  //   const next = query(
-  //     collection(db, "Donates"),
-  //     orderBy("Name"),
-  //     startAfter(lastVisible),
-  //     limit(2)
-  //   );
-
-  //   console.log("next =>", next);
-
-  // };
-
-  // console.log(donateList.length);
 
   return (
     <ScrollView style={styles.scrollView}>
